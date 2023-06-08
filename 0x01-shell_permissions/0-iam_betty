@@ -1,2 +1,2 @@
 #!/bin/bash
-su -c 'useradd -m betty && su - betty'
+su -c 'useradd -m betty su - betty'
