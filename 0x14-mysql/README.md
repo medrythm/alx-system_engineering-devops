@@ -2,11 +2,11 @@
 **0x14. MySQL**
 
 ## Author's Details.
-Name: *Wendy Munyasi.*
+Name: *Mohamed Hamama.*
 
-Email: *wendymunyasi@gmail.com*
+Email: *developperw@gmail.com*
 
-Tel:*+254707240068.*
+Tel:*+212601776602.*
 
 ##  Requirements
 
@@ -35,4 +35,4 @@ What is the purpose of a database replica. Why database backups need to be store
 
 ## Collaborate
 
-To collaborate, reach me through my email address wendymunyasi@gmail.com.
+To collaborate, reach me through my email address developperw@gmail.com.
