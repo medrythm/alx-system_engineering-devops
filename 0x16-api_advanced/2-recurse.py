@@ -1,45 +1,49 @@
 #!/usr/bin/python3
-"""
-Recursively queries the Reddit API and returns a list containing the titles of all hot articles for a given subreddit.
-If the subreddit is invalid or no results are found, it returns None.
-"""
-
+""" Queries the Reddit API and returns the number of subscribers """
 import requests
 
-def recurse(subreddit, hot_list=[], after=None):
-    if after is None:
-        url = f'https://www.reddit.com/r/{subreddit}/hot.json?limit=100'
-    else:
-        url = f'https://www.reddit.com/r/{subreddit}/hot.json?limit=100&after={after}'
-    
-    headers = {'User-Agent': 'by u/qasqot79'}  # Set a custom User-Agent to avoid issues
 
-    response = requests.get(url, headers=headers)
+def recurse(subreddit, hot_list=[], after=None, max_pages=None):
+    """
+    Recursively queries the Reddit API and returns a list containing the titles
+    of all hot articles for a given subreddit.
 
-    if response.status_code == 200:
-        data = response.json()
-        posts = data['data']['children']
+    Args:
+        subreddit (str): subreddit to query
+        hot_list (list): list of hot articles
+        after (str): identifier for the next page
+        max_pages (int): maximum number of pages to fetch
 
-        for post in posts:
-            hot_list.append(post['data']['title'])
+    Returns:
+        list: list of hot articles
+    """
+    if max_pages is not None and max_pages <= 0:
+        return hot_list  # Base case: Stop when max_pages is reached or None
 
-        after = data['data']['after']
-        if after is not None:
-            return recurse(subreddit, hot_list, after)
-        else:
-            return hot_list
-    else:
-        return None
+    base_url = 'https://www.reddit.com/r/{}/hot.json'.format(subreddit)
+    params = {'after': after} if after else {}
 
-if __name__ == '__main__':
-    import sys
+    request = requests.get(
+        base_url,
+        params=params,
+        headers={'User-Agent': 'Agent Uche'},
+        allow_redirects=False
+    )
 
-    if len(sys.argv) < 2:
-        print("Please pass an argument for the subreddit to search.")
-    else:
-        subreddit = sys.argv[1]
-        result = recurse(subreddit)
-        if result is not None:
-            print(len(result))
-        else:
-            print("None")
+    if request.status_code != 200:
+        return None  # Base case: Stop if the request fails
+
+    data = request.json()
+    posts = data.get('data', {}).get('children', [])
+
+    for post in posts:
+        hot_list.append(post['data']['title'])
+
+    next_page = data.get('data', {}).get('after')
+    if next_page:
+        # Recursively call to fetch the next page
+        return recurse(
+            subreddit, hot_list, after=next_page, max_pages=max_pages
+        )
+
+    return hot_list if len(hot_list) > 0 else None

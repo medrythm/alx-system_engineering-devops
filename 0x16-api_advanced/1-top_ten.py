@@ -1,30 +1,25 @@
 #!/usr/bin/python3
-"""
-Queries the Reddit API and prints the titles of the first 10 hot posts for a given subreddit.
-If the subreddit is invalid, it prints None.
-"""
-
+""" Queries the Reddit API and returns the number of subscribers """
 import requests
 
-def top_ten(subreddit):
-    url = f'https://www.reddit.com/r/{subreddit}/hot.json?limit=10'
-    headers = {'User-Agent': 'by u/qasqot79'}  # Set a custom User-Agent to avoid issues
 
-    response = requests.get(url, headers=headers)
+def top_ten(subreddit: str) -> None:
+    """
+    Queries the Reddit API and prints the titles of the first 10 hot posts
 
-    if response.status_code == 200:
-        data = response.json()
-        posts = data['data']['children']
-        for post in posts:
-            print(post['data']['title'])
-    else:
-        print(None)
+    Args:
+        subreddit (str): subreddit to query
 
-if __name__ == '__main__':
-    import sys
-
-    if len(sys.argv) < 2:
-        print("Please pass an argument for the subreddit to search.")
-    else:
-        subreddit = sys.argv[1]
-        top_ten(subreddit)
+    Returns:
+        None
+    """
+    base_url = 'https://www.reddit.com/r/{}/hot.json'.format(subreddit)
+    request = requests.get(
+        base_url, headers={'User-Agent': 'Agent Uche'}, allow_redirects=False
+    )
+    data = request.json()
+    try:
+        for i in range(10):
+            print(data['data']['children'][i]['data']['title'])
+    except Exception:
+        print('None')
