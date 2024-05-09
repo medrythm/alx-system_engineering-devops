@@ -1,25 +1,27 @@
 #!/usr/bin/python3
-""" Queries the Reddit API and returns the number of subscribers """
+"""
+Function that queries the Reddit API and prints the titles
+of the first 10 hot posts listed for a given subreddit.
+"""
+
 import requests
 
 
-def top_ten(subreddit: str) -> None:
+def top_ten(subreddit):
     """
-    Queries the Reddit API and prints the titles of the first 10 hot posts
-
-    Args:
-        subreddit (str): subreddit to query
-
-    Returns:
-        None
+    Function that queries the Reddit API
+    - If not a valid subreddit, print None.
     """
-    base_url = 'https://www.reddit.com/r/{}/hot.json'.format(subreddit)
-    request = requests.get(
-        base_url, headers={'User-Agent': 'Agent Uche'}, allow_redirects=False
+    req = requests.get(
+        "https://www.reddit.com/r/{}/hot.json".format(subreddit),
+        headers={"User-Agent": "Custom"},
+        params={"limit": 10},
     )
-    data = request.json()
-    try:
-        for i in range(10):
-            print(data['data']['children'][i]['data']['title'])
-    except Exception:
-        print('None')
+
+    if req.status_code == 200:
+        for get_data in req.json().get("data").get("children"):
+            dat = get_data.get("data")
+            title = dat.get("title")
+            print(title)
+    else:
+        print(None)
