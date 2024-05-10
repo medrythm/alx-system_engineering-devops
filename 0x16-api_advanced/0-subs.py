@@ -1,4 +1,5 @@
 import requests
+import sys
 
 def number_of_subscribers(subreddit):
     url = f"https://www.reddit.com/r/{subreddit}/about.json"
@@ -14,6 +15,9 @@ def number_of_subscribers(subreddit):
     else:
         return 0
 
-# Example usage:
-subreddit_name = 'python'
-print(f"Number of subscribers in r/{subreddit_name}: {number_of_subscribers(subreddit_name)}")
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print("Please pass an argument for the subreddit to search.")
+    else:
+        subreddit_name = sys.argv[1]
+        print("{:d}".format(number_of_subscribers(subreddit_name)))
