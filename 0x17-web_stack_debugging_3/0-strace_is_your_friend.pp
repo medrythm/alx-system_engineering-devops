@@ -1,6 +1,6 @@
-# Fixing Apache returning a 500 error
+# A puppet script to fix php settings file by replacing typos
 
-exec { 'fix error':
-  provider => 'shell',
-  command  => 'sed -i "s/phpp/php/g" /var/www/html/wp-settings.php'
+exec { 'fix_typo':
+  command => "sed -i 's/phpp/php/g' /var/www/html/wp-settings.php",
+  path    => ['/bin','/usr/bin']
 }
